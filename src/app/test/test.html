@@ -1,0 +1,83 @@
+<p>test works!</p>
+
+<h1>Testing Switch Case</h1>
+
+<input type="text" (input)="handleColorChange($event)" placeholder="Enter your color">
+
+
+<button (click)="handleClick('red')">Red</button>
+<button (click)="handleClick('yellow')">Yellow</button>
+<button (click)="handleClick('blue')">Blue</button>
+
+@switch (color) {
+  @case("red") {
+    <div style="width: 100px; height: 100px; background-color: red;"></div>
+  }
+  @case("yellow") {
+    <div style="width: 100px; height: 100px; background-color: yellow;"></div>
+  }
+  @case("blue") {
+    <div style="width: 100px; height: 100px; background-color: blue;"></div>
+  }
+  @default {
+    <div style="width: 100px; height: 100px; background-color: black;"></div>
+  }
+}
+
+
+<hr>
+<h1>Users</h1>
+
+@for(user of users; track user) {
+  <p>{{ user }}</p>
+}
+
+<hr>
+<h1>Students</h1>
+
+@for(student of students; track student; let i = $index) {
+  <p>{{ i + 1 }}. {{ student.name }} - {{ student.email }} - {{ student.age }}</p>
+}
+
+
+<hr>
+<h1>Count Signal</h1>
+<div class = "text-center">
+    {{count()}}
+</div>
+
+<button style="margin: 5px;" (click)="count.set(count() + 1)">Increment</button>
+<button style="margin: 5px;" (click)="count.set(count() - 1)">Decrement</button>
+
+
+<hr>
+<h1>Writable Signals</h1>
+<div class = "text-center">
+    {{data()}}
+</div>
+<button (click)="updateData()">Update Data</button>
+
+<hr>
+<h1>Computed Signals</h1>    
+<div class = "text-center">
+    {{sum()}}
+</div>
+
+<button style="margin: 5px;" (click)="showValue()">Show Value</button>
+
+
+
+<hr>
+
+<h1>Effect Signals</h1>
+
+<div class = "text-center">
+    {{countEffect()}}
+</div>
+
+<button style="margin: 5px;" (click)="countEffect.update(value => value + 1)">Increment</button>
+@if(displayToggle) {
+    <div style="position: fixed; top: 10px; right: 10px; background-color: lightgreen; padding: 10px; border: 1px solid green; border-radius: 5px;">
+        Sending Notification...
+    </div>
+}
