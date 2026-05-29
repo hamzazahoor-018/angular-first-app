@@ -1,83 +1,241 @@
-<p>test works!</p>
+<section class="directive-page">
+  <header class="hero">
+    <p class="eyebrow">Angular Directive Playground</p>
+    <h1>Built-in directives, custom directives, and host interactions</h1>
+    <p class="hero-copy">
+      This page now demonstrates structural directives, attribute directives,
+      HostBinding / HostListener, and the new control flow syntax in one place.
+    </p>
+  </header>
 
-<h1>Testing Switch Case</h1>
+  <section class="panel">
+    <h2>Built-in attribute directives</h2>
 
-<input type="text" (input)="handleColorChange($event)" placeholder="Enter your color">
-
-
-<button (click)="handleClick('red')">Red</button>
-<button (click)="handleClick('yellow')">Yellow</button>
-<button (click)="handleClick('blue')">Blue</button>
-
-@switch (color) {
-  @case("red") {
-    <div style="width: 100px; height: 100px; background-color: red;"></div>
-  }
-  @case("yellow") {
-    <div style="width: 100px; height: 100px; background-color: yellow;"></div>
-  }
-  @case("blue") {
-    <div style="width: 100px; height: 100px; background-color: blue;"></div>
-  }
-  @default {
-    <div style="width: 100px; height: 100px; background-color: black;"></div>
-  }
-}
-
-
-<hr>
-<h1>Users</h1>
-
-@for(user of users; track user) {
-  <p>{{ user }}</p>
-}
-
-<hr>
-<h1>Students</h1>
-
-@for(student of students; track student; let i = $index) {
-  <p>{{ i + 1 }}. {{ student.name }} - {{ student.email }} - {{ student.age }}</p>
-}
-
-
-<hr>
-<h1>Count Signal</h1>
-<div class = "text-center">
-    {{count()}}
-</div>
-
-<button style="margin: 5px;" (click)="count.set(count() + 1)">Increment</button>
-<button style="margin: 5px;" (click)="count.set(count() - 1)">Decrement</button>
-
-
-<hr>
-<h1>Writable Signals</h1>
-<div class = "text-center">
-    {{data()}}
-</div>
-<button (click)="updateData()">Update Data</button>
-
-<hr>
-<h1>Computed Signals</h1>    
-<div class = "text-center">
-    {{sum()}}
-</div>
-
-<button style="margin: 5px;" (click)="showValue()">Show Value</button>
-
-
-
-<hr>
-
-<h1>Effect Signals</h1>
-
-<div class = "text-center">
-    {{countEffect()}}
-</div>
-
-<button style="margin: 5px;" (click)="countEffect.update(value => value + 1)">Increment</button>
-@if(displayToggle) {
-    <div style="position: fixed; top: 10px; right: 10px; background-color: lightgreen; padding: 10px; border: 1px solid green; border-radius: 5px;">
-        Sending Notification...
+    <div class="form-row">
+      <label for="userName">ngModel</label>
+      <input
+        id="userName"
+        type="text"
+        [(ngModel)]="userName"
+        placeholder="Type your name"
+      />
     </div>
-}
+
+    <div class="controls">
+      <button (click)="changeTheme('teal')">Teal</button>
+      <button (click)="changeTheme('amber')">Amber</button>
+      <button (click)="changeTheme('violet')">Violet</button>
+      <button (click)="toggleBuiltInDemo()">
+        {{ showBuiltInDemo ? 'Hide' : 'Show' }} built-in structural demo
+      </button>
+    </div>
+
+    <p
+      [ngClass]="{
+        'name-chip': true,
+        active: userName.length > 5,
+        muted: userName.length <= 5
+      }"
+      [ngStyle]="{
+        borderColor: directiveTheme === 'teal' ? '#14b8a6' : directiveTheme === 'amber' ? '#f59e0b' : '#8b5cf6',
+        color: directiveTheme === 'teal' ? '#0f766e' : directiveTheme === 'amber' ? '#92400e' : '#6d28d9'
+      }"
+    >
+      Hello, {{ userName }}.
+    </p>
+  </section>
+
+  @if (showBuiltInDemo) {
+    <section class="panel">
+      <h2>Built-in structural directives</h2>
+
+      <div class="grid">
+        <article class="card">
+          <h3>Modern control flow if</h3>
+
+          @if (userName.length > 8) {
+            <p class="badge success">The &#64;if branch is active.</p>
+          } @else if (userName.length > 4) {
+            <p class="badge warning">The &#64;else if branch is active.</p>
+          } @else {
+            <p class="badge danger">The &#64;else branch is active.</p>
+          }
+
+          <p class="small-row">
+            This replaces the older <code>*ngIf</code> syntax with the modern control flow API.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Modern control flow for</h3>
+
+          @for (item of directiveItems; track item; let index = $index) {
+            <p class="small-row">{{ index + 1 }}. {{ item }}</p>
+          }
+
+          @for (student of students; track student.email; let index = $index) {
+            <p class="small-row">{{ index + 1 }}. {{ student.name }} - {{ student.email }}</p>
+          }
+        </article>
+
+        <article class="card">
+          <h3>Modern control flow switch</h3>
+          <div class="controls compact">
+            <button (click)="updateSelectedLayout('card')">Card</button>
+            <button (click)="updateSelectedLayout('list')">List</button>
+            <button (click)="updateSelectedLayout('grid')">Grid</button>
+          </div>
+
+          @switch (color) {
+            @case ('red') {
+              <div class="swatch swatch-red"></div>
+            }
+            @case ('yellow') {
+              <div class="swatch swatch-yellow"></div>
+            }
+            @case ('blue') {
+              <div class="swatch swatch-blue"></div>
+            }
+            @default {
+              <div class="swatch swatch-default"></div>
+            }
+          }
+
+          @switch (selectedLayout) {
+            @case ('card') {
+              <p class="small-row">The card layout is active.</p>
+            }
+            @case ('list') {
+              <p class="small-row">The list layout is active.</p>
+            }
+            @case ('grid') {
+              <p class="small-row">The grid layout is active.</p>
+            }
+            @default {
+              <p class="small-row">The default layout is active.</p>
+            }
+          }
+        </article>
+      </div>
+    </section>
+  }
+
+  <section class="panel">
+    <h2>Custom directives</h2>
+
+    <div class="controls">
+      <button (click)="toggleBox()">
+        {{ boxVisible ? 'Hide' : 'Show' }} example box
+      </button>
+    </div>
+
+    @if (boxVisible) {
+      <div class="notice" appClickOutside (clickOutside)="boxVisible = false">
+        Click outside this box to close it.
+      </div>
+    }
+
+    <div class="directive-card" appHighlight [highlightColor]="favoriteColor">
+      <h3>Hover the custom attribute directive</h3>
+      <p>
+        The card uses HostBinding and HostListener to react to mouse enter and leave events.
+      </p>
+      <p class="muted-copy">Current highlight color: {{ favoriteColor }}</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Signals recap</h2>
+
+    <div class="grid signals-grid">
+      <article class="card">
+        <h3>Writable signal</h3>
+        <div class="signal-value">{{ data() }}</div>
+        <button (click)="updateData()">Update data</button>
+      </article>
+
+      <article class="card">
+        <h3>Computed signal</h3>
+        <div class="signal-value">{{ sum() }}</div>
+        <button (click)="showValue()">Recompute</button>
+      </article>
+
+      <article class="card">
+        <h3>Effect</h3>
+        <div class="signal-value">{{ countEffect() }}</div>
+        <button (click)="increment()">Increment</button>
+        @if (displayToggle) {
+          <div class="toast">Sending Notification...</div>
+        }
+      </article>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Pipes</h2>
+
+    <div class="grid">
+      <article class="card">
+        <h3>Built-in pipes</h3>
+        <p><strong>Uppercase:</strong> {{ rootService.title() | uppercase }}</p>
+        <p><strong>Date:</strong> {{ releaseDate | date: 'medium' }}</p>
+        <p><strong>Currency:</strong> {{ totalCost | currency: 'USD' }}</p>
+        <p><strong>JSON:</strong></p>
+        <pre>{{ serviceSnapshot | json }}</pre>
+      </article>
+
+      <article class="card">
+        <h3>Custom pure pipe</h3>
+        <p>{{ pipeDemoText | short: 72 }}</p>
+        <p class="small-row">The pipe keeps long text short and readable.</p>
+      </article>
+
+      <article class="card">
+        <h3>Custom impure pipe</h3>
+        <p>{{ tags | tags: ' | ' }}</p>
+        <button (click)="addTag()">Add tag</button>
+        <p class="small-row">
+          The array is mutated in place, so the impure pipe keeps the rendered text up to date.
+        </p>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Services and dependency injection</h2>
+
+    <div class="grid">
+      <article class="card">
+        <h3>Root service singleton</h3>
+        <p class="small-row">
+          This service is registered with <code>providedIn: 'root'</code>, so every place in the app
+          receives the same instance.
+        </p>
+        <p><strong>Tip:</strong> {{ rootService.tip() }}</p>
+        <button (click)="updateServiceTip()">Update root service tip</button>
+      </article>
+
+      <article class="card">
+        <h3>Hierarchical injector</h3>
+        <p><strong>Local count:</strong> {{ counterService.count() }}</p>
+        <div class="controls compact">
+          <button (click)="incrementWorkshopCounter()">Increment local service</button>
+          <button (click)="resetWorkshopCounter()">Reset local service</button>
+        </div>
+        <p class="small-row">
+          This service is listed in the component providers, so this component gets its own instance.
+        </p>
+      </article>
+
+      <article class="card">
+        <h3>inject() usage</h3>
+        <p class="small-row">
+          The component resolves both services with the <code>inject()</code> function instead of a
+          constructor parameter.
+        </p>
+        <p><strong>Shared headline:</strong> {{ rootService.title() | titlecase }}</p>
+      </article>
+    </div>
+  </section>
+</section>
